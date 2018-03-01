@@ -1,24 +1,32 @@
 module.exports = {
-    entry: "./entry.js",
-    output: {
-        path: __dirname,
-        filename: "bundle.js"
+  entry: './entry.js',
+  output: {
+    path: __dirname,
+    filename: 'bundle.js',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['es2015', 'stage-2'],
+        },
+      },
+      {
+        test: /\.(gif|jpe?g|png|svg)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            name: '[name].[ext]',
+          },
+        },
+      },
+    ],
+  },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
     },
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "babel-loader",
-                query: {
-                    presets: ["env", "stage-0", "react"]
-                }
-            }
-        ]
-    },
-    resolve: {
-        alias: {
-            "react-native": "react-native-web"
-        }
-    }
+  },
 };
