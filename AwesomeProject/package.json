@@ -12,7 +12,9 @@
     "react": "16.0.0-beta.5",
     "react-native": "0.49.3",
     "react-native-animatable": "^1.2.4",
-    "react-native-game-engine": "^0.8.9"
+    "react-native-game-engine": "^0.8.9",
+    "react-native-svg": "^6.2.2",
+    "react-native-svg-web": "^1.0.1"
   },
   "devDependencies": {
     "babel": "^6.23.0",

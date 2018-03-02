@@ -4,7 +4,9 @@
   "description": "Demo showcasing setting up React Native and React Native Web with live reload on both.",
   "main": "entry.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "web-dev":"webpack-dev-server --mode development --watch --port 8082",
+    "web-prod":"webpack-dev-server --mode production --watch --port 8082"
   },
   "repository": {
     "type": "git",

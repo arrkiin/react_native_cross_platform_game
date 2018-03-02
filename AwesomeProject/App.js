@@ -14,47 +14,32 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
+import Svg, { Rect } from 'react-native-svg';
 import { GameLoop } from 'react-native-game-engine';
 import * as Animatable from 'react-native-animatable';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 export default class App extends PureComponent {
+  colorBorder = 'grey';
+  colorBackground = 'white';
   constructor(props) {
     super(props);
-    this.state = {
-      rotation: 0,
-    };
   }
-  handleViewRef = ref => (this.view = ref);
-  updateHandler = ({ time }) => {
-    if (isNaN(time.delta)) {
-      return;
-    }
-    this.setState(prevState => {
-      if (prevState) {
-        const delta = time.delta;
-        const newRotation = delta * 0.002 + prevState.rotation;
-        return {
-          rotation: newRotation,
-        };
-      }
-    });
+  handleImageRef = ref => (this.image = ref);
+  updateHandler = ({ time }) => {};
+  animationEndHandler = obj => {
+    this.colorBackground = this.colorBackground === 'grey' ? 'white' : 'grey';
+    // this.image.setNativeProps({
+    //   style: [
+    //     styles.image,
+    //     {
+    //       backgroundColor: this.colorBackground,
+    //     },
+    //   ],
+    // });
   };
-  bounce = () =>
-    this.view
-      .bounce(800)
-      .then(endState =>
-        console.log(endState.finished ? 'bounce finished' : 'bounce cancelled')
-      );
   render() {
     return (
       <View style={styles.container}>
@@ -63,70 +48,52 @@ export default class App extends PureComponent {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: 0,
-            height: 0,
+            width: '100%',
+            height: '100%',
           }}
         >
           <Animatable.View
-            style={{
-              width: 0,
-              height: 0,
-              top: HEIGHT / 2 + 70,
-              left: WIDTH / 2,
-              alignContent: 'center',
-              justifyContent: 'center',
-            }}
+            style={styles.imageContainer}
             animation="rotate"
             easing="linear"
             iterationCount="infinite"
-            useNativeDriver={true}
+            useNativeDriver
             duration={3000}
             direction="reverse"
+            onAnimationEnd={this.animationEndHandler}
           >
             <Image
-              style={{
-                alignSelf: 'center',
-                width: 100,
-                height: 100,
-                resizeMode: 'contain',
-              }}
+              ref={this.handleImageRef}
+              style={styles.image}
               source={require('./assets/icon.png')}
             />
           </Animatable.View>
+        </View>
+        <View style={{ alignSelf: 'center' }}>
+          <Svg width="200" height="200">
+            <Rect
+              x="25"
+              y="25"
+              width="150"
+              height="50"
+              fill="rgb(255, 153, 204)"
+              strokeWidth="1"
+              stroke="#e60073"
+              strokeDasharray="200"
+              strokeDashoffset="0"
+            />
+          </Svg>
         </View>
         <GameLoop
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
-            width: 0,
-            height: 0,
+            width: '100%',
+            height: '100%',
           }}
           onUpdate={this.updateHandler}
-        >
-          <View
-            style={{
-              width: 0,
-              height: 0,
-              top: HEIGHT / 2 - 70,
-              left: WIDTH / 2,
-              position: 'absolute',
-              alignContent: 'center',
-              justifyContent: 'center',
-              transform: [{ rotate: this.state.rotation + 'rad' }],
-            }}
-          >
-            <Image
-              style={{
-                alignSelf: 'center',
-                width: 100,
-                height: 100,
-                resizeMode: 'contain',
-              }}
-              source={require('./assets/icon.png')}
-            />
-          </View>
-        </GameLoop>
+        />
       </View>
     );
   }
@@ -138,5 +105,24 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     backgroundColor: 'white',
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    top: HEIGHT / 2 - 50,
+    left: WIDTH / 2 - 50,
+    backgroundColor: 'white',
+  },
+  image: {
+    position: 'relative',
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    // backgroundColor: 'grey',
+    // borderColor: 'grey',
+    // borderWidth: 1,
+    // borderRadius: 0,
   },
 });
